@@ -32,6 +32,9 @@ RUN docker-php-ext-install mcrypt
 
 RUN docker-php-ext-install gettext mbstring soap
 
+# Pour C&P
+RUN docker-php-ext-install zip
+
 RUN docker-php-ext-install ftp
 
 # pour ext ldap
@@ -65,7 +68,7 @@ RUN \
 RUN apt-get autoremove -y && apt-get clean all
   
 VOLUME ["/u"]
-VOLUME ["/var/logs"]
+VOLUME ["/var/log"]
 
 COPY apache2.development.conf /etc/apache2/apache2.development.conf
 COPY apache2.production.conf /etc/apache2/apache2.production.conf
