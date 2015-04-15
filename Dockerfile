@@ -9,9 +9,6 @@ RUN apt-get install -y g++
 RUN apt-get install -y libicu-dev
 RUN docker-php-ext-install intl
 
-# ext bcmath
-RUN docker-php-ext-install bcmath
-
 # pour ext imap
 RUN apt-get install -y openssl
 RUN apt-get install -y libc-client-dev
