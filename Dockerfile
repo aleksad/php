@@ -32,7 +32,7 @@ RUN docker-php-ext-install mcrypt
 
 RUN docker-php-ext-install gettext mbstring soap
 
-# Pour C&P
+# Pour C&P et composer
 RUN docker-php-ext-install zip
 
 RUN docker-php-ext-install ftp
@@ -42,31 +42,33 @@ RUN docker-php-ext-install ftp
 # RUN docker-php-ext-configure ldap --prefix=/usr/local/php --with-ldap=/usr/lib/i386-linux-gnu
 # RUN docker-php-ext-install ldap
 
+# ext bcmath pour client RabbitMQ
+RUN docker-php-ext-configure bcmath
+RUN docker-php-ext-install bcmath
+
 # ext curl pour elasticsearch
 RUN apt-get install -y libcurl4-openssl-dev
 RUN docker-php-ext-install curl
 
-# APC
 COPY ./php.ini /usr/local/etc/php/php.ini
+
+# Opcache
+RUN pecl install -o -f zendopcache \
+    && echo "zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20100525/opcache.so" > /usr/local/etc/php/conf.d/opcache.ini
+
+# APC
 RUN pear config-set php_ini /usr/local/etc/php/php.ini
 RUN pecl config-set php_ini /usr/local/etc/php/php.ini
 RUN pecl install apc
 
 RUN a2enmod rewrite
 
-# PhantomJS
-ENV PHANTOMJS_VERSION 1.9.7
-RUN \
-  apt-get install -y libfreetype6 libfontconfig bzip2 && \
-  mkdir -p /srv/var && \
-  curl -s -o /tmp/phantomjs-$PHANTOMJS_VERSION-linux-x86_64.tar.bz2 -L https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-$PHANTOMJS_VERSION-linux-x86_64.tar.bz2 && \
-  tar -xjf /tmp/phantomjs-$PHANTOMJS_VERSION-linux-x86_64.tar.bz2 -C /tmp && \
-  rm -f /tmp/phantomjs-$PHANTOMJS_VERSION-linux-x86_64.tar.bz2 && \
-  mv /tmp/phantomjs-$PHANTOMJS_VERSION-linux-x86_64/ /srv/var/phantomjs && \
-  ln -s /srv/var/phantomjs/bin/phantomjs /usr/bin/phantomjs
-  
+RUN curl -sL https://deb.nodesource.com/setup | bash -
+RUN apt-get install -y nodejs build-essential
+RUN npm install -g phantomjs casperjs
+
 RUN apt-get autoremove -y && apt-get clean all
-  
+
 VOLUME ["/u"]
 VOLUME ["/var/log"]
 
