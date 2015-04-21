@@ -70,7 +70,6 @@ RUN npm install -g phantomjs casperjs
 RUN apt-get autoremove -y && apt-get clean all
 
 VOLUME ["/u"]
-VOLUME ["/var/log"]
 
 COPY apache2.development.conf /etc/apache2/apache2.development.conf
 COPY apache2.production.conf /etc/apache2/apache2.production.conf
