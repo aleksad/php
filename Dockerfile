@@ -63,7 +63,6 @@ RUN pecl install apc
 
 RUN a2enmod rewrite
 
-RUN curl -sS https://getcomposer.org/installer | php -- --filename=composer --install-dir=/usr/local/bin
 RUN curl -sL https://deb.nodesource.com/setup | bash -
 RUN apt-get install -y nodejs build-essential
 RUN npm install -g phantomjs casperjs
